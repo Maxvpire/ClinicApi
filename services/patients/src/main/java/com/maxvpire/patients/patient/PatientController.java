@@ -1,0 +1,48 @@
+package com.maxvpire.patients.patient;
+
+import com.maxvpire.patients.patient.dto.PatientRequest;
+import com.maxvpire.patients.patient.dto.PatientResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/patient")
+@RequiredArgsConstructor
+public class PatientController {
+    private final PatientService patientService;
+
+    @PostMapping()
+    public ResponseEntity<String> createPatient(@RequestBody @Valid PatientRequest request) {
+        return ResponseEntity.ok(patientService.createPatient(request));
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updatePatient(
+            @RequestBody @Valid PatientRequest request,
+            @PathVariable String id
+    ) {
+        patientService.updatePatient(id, request);
+        return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PatientResponse>> findAll() {
+        return ResponseEntity.ok(patientService.findAll());
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<PatientResponse> findById(@PathVariable String id) {
+        return ResponseEntity.ok(patientService.findById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable String id) {
+        patientService.deletePatient(id);
+        return ResponseEntity.accepted().build();
+    }
+}
