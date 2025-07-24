@@ -20,6 +20,10 @@ public class PatientController {
         return ResponseEntity.ok(patientService.createPatient(request));
     }
 
+    @PostMapping("/search/{name}")
+    public ResponseEntity<List<PatientResponse>> searchPatients(@PathVariable("name") String name) {
+        return ResponseEntity.ok(patientService.searchPatient(name));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updatePatient(
@@ -38,6 +42,11 @@ public class PatientController {
     @GetMapping("/id/{id}")
     public ResponseEntity<PatientResponse> findById(@PathVariable String id) {
         return ResponseEntity.ok(patientService.findById(id));
+    }
+
+    @GetMapping("/number/{number}")
+    public ResponseEntity<PatientResponse> findByNumber(@PathVariable String number) {
+        return ResponseEntity.ok(patientService.findByPhoneNumber(number));
     }
 
     @DeleteMapping("/{id}")

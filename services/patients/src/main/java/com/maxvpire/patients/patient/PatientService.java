@@ -70,4 +70,17 @@ public class PatientService {
     public void deletePatient(String id) {
         patientRepository.deleteById(id);
     }
+
+    public List<PatientResponse> searchPatient(String name) {
+        return patientRepository.searchPatients(name)
+                .stream()
+                .map(patientMapper::fromPatient)
+                .collect(Collectors.toList());
+    }
+
+    public PatientResponse findByPhoneNumber(String phoneNumber) {
+        Patient patient = patientRepository.findPatientByPhone_number(phoneNumber)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found!"));
+        return patientMapper.fromPatient(patient);
+    }
 }
