@@ -34,6 +34,17 @@ public class PatientController {
         return ResponseEntity.accepted().build();
     }
 
+    @PutMapping("/ban/{id}")
+    public ResponseEntity<String> banPatient(@PathVariable String id) {
+        patientService.banPatient(id);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PutMapping("/unban/{id}")
+    public ResponseEntity<String> unbanPatient(@PathVariable String id) {
+        patientService.unBanPatient();
+    }
+
     @GetMapping
     public ResponseEntity<List<PatientResponse>> findAll() {
         return ResponseEntity.ok(patientService.findAll());

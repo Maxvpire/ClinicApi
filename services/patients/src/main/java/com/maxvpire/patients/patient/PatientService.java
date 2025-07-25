@@ -83,4 +83,18 @@ public class PatientService {
                 .orElseThrow(() -> new PatientNotFoundException("Patient not found!"));
         return patientMapper.fromPatient(patient);
     }
+
+    public void banPatient(String id) {
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found!"));
+        patient.setBanned(true);
+        patientRepository.save(patient);
+    }
+
+    public void unBanPatient(String id) {
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found!"));
+        patient.setBanned(false);
+        patientRepository.save(patient);
+    }
 }

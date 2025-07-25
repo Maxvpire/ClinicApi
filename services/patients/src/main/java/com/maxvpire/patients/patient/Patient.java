@@ -33,6 +33,8 @@ public class Patient {
 
     private Address address;
 
+    private boolean banned = false;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
