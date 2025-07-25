@@ -42,7 +42,8 @@ public class PatientController {
 
     @PutMapping("/unban/{id}")
     public ResponseEntity<String> unbanPatient(@PathVariable String id) {
-        patientService.unBanPatient();
+        patientService.unBanPatient(id);
+        return ResponseEntity.accepted().build();
     }
 
     @GetMapping
