@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PatientRepository extends MongoRepository<Patient, String> {
-    @Query("{ 'firstName': { $regex: ?0, $options: 'i' }, 'lastName': { $regex: ?0, $options: 'i' } }")
-    List<Patient> searchPatients(String name);
-
-    Optional<Patient> findPatientByPhone_number(String phoneNumber);
+//    @Query("{ 'firstName': { $regex: ?0, $options: 'i' }, 'lastName': { $regex: ?0, $options: 'i' } }")
+//    List<Patient> searchPatients(String name);
+//
+//    Optional<Patient> findPatientByPhone_number(String phoneNumber);
 }

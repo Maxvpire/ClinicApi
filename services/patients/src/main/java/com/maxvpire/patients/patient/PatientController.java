@@ -2,6 +2,7 @@ package com.maxvpire.patients.patient;
 
 import com.maxvpire.patients.patient.dto.PatientRequest;
 import com.maxvpire.patients.patient.dto.PatientResponse;
+import com.maxvpire.patients.patient.dto.UpdatePatientRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,15 @@ public class PatientController {
     public ResponseEntity<String> createPatient(@RequestBody @Valid PatientRequest request) {
         return ResponseEntity.ok(patientService.createPatient(request));
     }
+//
+//    @GetMapping("/search/{name}")
+//    public ResponseEntity<List<PatientResponse>> searchPatients(@PathVariable("name") String name) {
+//        return ResponseEntity.ok(patientService.searchPatient(name));
+//    }
 
-    @PostMapping("/search/{name}")
-    public ResponseEntity<List<PatientResponse>> searchPatients(@PathVariable("name") String name) {
-        return ResponseEntity.ok(patientService.searchPatient(name));
-    }
-
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updatePatient(
-            @RequestBody @Valid PatientRequest request,
+            @RequestBody @Valid UpdatePatientRequest request,
             @PathVariable String id
     ) {
         patientService.updatePatient(id, request);
@@ -56,10 +57,10 @@ public class PatientController {
         return ResponseEntity.ok(patientService.findById(id));
     }
 
-    @GetMapping("/number/{number}")
-    public ResponseEntity<PatientResponse> findByNumber(@PathVariable String number) {
-        return ResponseEntity.ok(patientService.findByPhoneNumber(number));
-    }
+//    @GetMapping("/number/{number}")
+//    public ResponseEntity<PatientResponse> findByNumber(@PathVariable String number) {
+//        return ResponseEntity.ok(patientService.findByPhoneNumber(number));
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable String id) {

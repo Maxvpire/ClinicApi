@@ -14,7 +14,6 @@ public record PatientRequest(
         String firstname,
         @NotNull(message = "Patient's lastname is required!")
         String lastname,
-        @EnumValidator(enumClass = Gender.class, message = "Gender is required!")
         Gender gender,
         @NotNull(message = "Patient's birthday day is required!")
         LocalDate birth_date,
