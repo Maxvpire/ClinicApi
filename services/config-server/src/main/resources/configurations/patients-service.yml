@@ -1,10 +1,7 @@
 spring:
   data:
     mongodb:
-      username: root
-      password: example
-      host: localhost
-      port: 27017
+      uri: mongodb+srv://maxvpire:max26156@cluster0.e6kkugm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: patients
       authentication-database: admin
 

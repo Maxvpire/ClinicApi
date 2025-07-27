@@ -1,6 +1,6 @@
-package com.maxvpire.doctors.doctor;
+package com.maxvpire.doctors.doctor.dto;
 
-import jakarta.persistence.Column;
+import com.maxvpire.doctors.doctor.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,14 +14,13 @@ public record DoctorRequest(
         String lastname,
         @NotNull(message = "Specialization is required!")
         String specialization,
-        @Email("Email ")
+        @Email(message = "Invalid email format!")
         String email,
-        @NotNull
+        @NotNull(message = "Phone number is required!")
         String phone,
-        @NotNull
+        @NotNull(message = "Gender is required; And have to be MALE or Female!")
         Gender gender,
-        @NotNull
+        @NotNull(message = "Date of birthday is required!")
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate dateOfBirth
-) {
-}
+) { }
