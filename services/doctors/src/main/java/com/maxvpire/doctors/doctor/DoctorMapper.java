@@ -14,10 +14,11 @@ public class DoctorMapper {
                 doctor.getEmail(),
                 doctor.getPhone(),
                 doctor.getGender(),
-                doctor.isActive(),
-                doctor.getDateOfBirth(),
-                doctor.getCreatedAt(),
-                doctor.getUpdatedAt()
+                doctor.is_active(),
+                doctor.isDeleted(),
+                doctor.getDateofbirth(),
+                doctor.getCreated_at(),
+                doctor.getLast_modified_at()
         );
     }
 }

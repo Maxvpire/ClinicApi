@@ -20,11 +20,16 @@ public class PatientController {
     public ResponseEntity<String> createPatient(@RequestBody @Valid PatientRequest request) {
         return ResponseEntity.ok(patientService.createPatient(request));
     }
-//
-//    @GetMapping("/search/{name}")
-//    public ResponseEntity<List<PatientResponse>> searchPatients(@PathVariable("name") String name) {
-//        return ResponseEntity.ok(patientService.searchPatient(name));
-//    }
+
+    @GetMapping("/search/name/{name}")
+    public ResponseEntity<List<PatientResponse>> searchPatients(@PathVariable("name") String name) {
+        return ResponseEntity.ok(patientService.searchPatientByName(name));
+    }
+
+    @GetMapping("/search/phone/{phone}")
+    public ResponseEntity<List<PatientResponse>> searchPatientsByPhone(@PathVariable("phone") String phone) {
+        return ResponseEntity.ok(patientService.searchPatientByPhoneNumber(phone));
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updatePatient(
@@ -57,14 +62,20 @@ public class PatientController {
         return ResponseEntity.ok(patientService.findById(id));
     }
 
-//    @GetMapping("/number/{number}")
-//    public ResponseEntity<PatientResponse> findByNumber(@PathVariable String number) {
-//        return ResponseEntity.ok(patientService.findByPhoneNumber(number));
-//    }
+    @GetMapping("/phone/{number}")
+    public ResponseEntity<PatientResponse> findByNumber(@PathVariable String number) {
+        return ResponseEntity.ok(patientService.findByPhoneNumber(number));
+    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatient(@PathVariable String id) {
+    @PutMapping("/delete/{id}")
+    public ResponseEntity<String> deletePatient(@PathVariable String id) {
         patientService.deletePatient(id);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<String> restorePatient(@PathVariable String id) {
+        patientService.restorePatient(id);
         return ResponseEntity.accepted().build();
     }
 }

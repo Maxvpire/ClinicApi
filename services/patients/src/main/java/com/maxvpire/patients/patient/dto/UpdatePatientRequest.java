@@ -9,7 +9,7 @@ public record UpdatePatientRequest(
         @NotNull(message = "Lastname is required!")
         String lastname,
         @NotNull(message = "Phone number is required!")
-        String phone_number,
+        String phone,
         Address address
 ) {
 }

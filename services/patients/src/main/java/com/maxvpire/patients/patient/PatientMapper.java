@@ -16,7 +16,7 @@ public class PatientMapper {
                 .gender(request.gender())
                 .birth_date(request.birth_date())
                 .email(request.email())
-                .phone_number(request.phone_number())
+                .phone(request.phone())
                 .address(request.address())
                 .build();
     }
@@ -28,8 +28,10 @@ public class PatientMapper {
                 patient.getLastname(),
                 patient.getGender(),
                 patient.getBirth_date(),
-                patient.getPhone_number(),
+                patient.getPhone(),
                 patient.getEmail(),
+                patient.isBanned(),
+                patient.isDeleted(),
                 patient.getAddress(),
                 patient.getCreatedAt(),
                 patient.getUpdatedAt()

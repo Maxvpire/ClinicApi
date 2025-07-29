@@ -26,7 +26,7 @@ public class Patient {
     private LocalDate birth_date;
 
     @Indexed(unique = true)
-    private String phone_number;
+    private String phone;
 
     @Indexed(unique = true)
     private String email;
@@ -34,6 +34,7 @@ public class Patient {
     private Address address;
 
     private boolean banned = false;
+    private boolean deleted = false;
 
     @CreatedDate
     private LocalDateTime createdAt;

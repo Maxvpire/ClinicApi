@@ -22,5 +22,5 @@ public record DoctorRequest(
         Gender gender,
         @NotNull(message = "Date of birthday is required!")
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        LocalDate dateOfBirth
+        LocalDate dateofbirth
 ) { }

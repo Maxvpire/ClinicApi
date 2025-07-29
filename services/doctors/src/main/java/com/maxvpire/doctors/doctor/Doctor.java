@@ -1,5 +1,6 @@
 package com.maxvpire.doctors.doctor;
 
+import com.maxvpire.doctors.schedule.Schedule;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,18 +35,25 @@ public class Doctor {
     private String phone;
 
     @Column(updatable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(columnDefinition = "true")
-    private boolean isActive;
+    private boolean is_active;
+
+    @Column(columnDefinition = "false")
+    private boolean deleted;
 
     @Column(updatable = false)
-    private LocalDate dateOfBirth;
+    private LocalDate dateofbirth;
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules = new ArrayList<>();
 
     @Column(updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private LocalDateTime last_modified_at;
 }

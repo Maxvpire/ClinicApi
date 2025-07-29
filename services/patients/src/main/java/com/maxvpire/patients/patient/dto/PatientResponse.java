@@ -11,8 +11,10 @@ public record PatientResponse(
         String lastname,
         Gender gender,
         LocalDate birth_date,
-        String phone_number,
+        String phone,
         String email,
+        boolean banned,
+        boolean deleted,
         Address address,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

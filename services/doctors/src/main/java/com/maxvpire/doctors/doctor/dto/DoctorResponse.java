@@ -14,8 +14,9 @@ public record DoctorResponse(
     String phone,
     Gender gender,
     boolean isActive,
-    LocalDate dateOfBirth,
-    LocalDateTime createdAt,
-    LocalDateTime lastModifiedDate
+    boolean deleted,
+    LocalDate dateofbirth,
+    LocalDateTime created_at,
+    LocalDateTime lastModifiedAt
 ) {
 }

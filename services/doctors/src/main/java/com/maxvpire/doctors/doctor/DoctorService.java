@@ -22,7 +22,7 @@ public class DoctorService {
                 .lastname(request.lastname())
                 .email(request.email())
                 .phone(request.phone())
-                .dateOfBirth(request.dateOfBirth())
+                .dateofbirth(request.dateofbirth())
                 .specialization(request.specialization())
                 .gender(request.gender())
                 .build();
@@ -64,5 +64,60 @@ public class DoctorService {
             doctor.setPhone(request.phone());
         }
 
+    }
+
+    public void inActiveDoctor(String id) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+        doctor.set_active(false);
+        doctorRepository.save(doctor);
+    }
+
+    public void activeDoctor(String id) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+        doctor.set_active(true);
+        doctorRepository.save(doctor);
+    }
+
+
+    public void delete(String id) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+        doctor.setDeleted(true);
+        doctorRepository.save(doctor);
+    }
+
+    public void restoreDoctor(String id) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+        doctor.setDeleted(false);
+        doctorRepository.save(doctor);
+    }
+
+    public List<DoctorResponse> searchByName(String name) {
+        return doctorRepository.searchByName(name)
+                .stream()
+                .map(doctorMapper::toDoctorResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<DoctorResponse> searchByPhone(String phone) {
+        return doctorRepository.searchByPhone(phone)
+                .stream()
+                .map(doctorMapper::toDoctorResponse)
+                .collect(Collectors.toList());
+    }
+
+    public DoctorResponse findByEmail(String email) {
+        return doctorRepository.findDoctorByEmail(email)
+                .map(doctorMapper::toDoctorResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor with this email is not found!"));
+    }
+
+    public DoctorResponse findByPhone(String phone) {
+        return doctorRepository.findDoctorByPhone(phone)
+                .map(doctorMapper::toDoctorResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor with this phone number is not found!"));
     }
 }

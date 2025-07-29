@@ -3,7 +3,6 @@ package com.maxvpire.patients.patient.dto;
 
 import com.maxvpire.patients.patient.Address;
 import com.maxvpire.patients.patient.Gender;
-import com.maxvpire.patients.validator.EnumValidator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,7 +17,7 @@ public record PatientRequest(
         @NotNull(message = "Patient's birthday day is required!")
         LocalDate birth_date,
         @NotNull(message = "Patient's phone number is required!")
-        String phone_number,
+        String phone,
         @Email(message = "Invalid email format!")
         String email,
         Address address
