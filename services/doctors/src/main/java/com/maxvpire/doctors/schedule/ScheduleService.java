@@ -11,11 +11,12 @@ public class ScheduleService {
 
     public String addSchedule(ScheduleRequest request) {
         Schedule schedule = Schedule.builder()
-                .doctor(request.doctor())
+                .doctors(request.doctor_id())
+                .weekday(request.weekday())
                 .start_time(request.start_time())
                 .end_time(request.end_time())
-                .weekday(request.weekday())
                 .build();
+        System.out.println(request.weekday());
         return scheduleRepository.save(schedule).getId();
     }
 }
