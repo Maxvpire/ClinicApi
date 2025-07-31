@@ -26,7 +26,6 @@ public class Schedule {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "doctor_id", nullable = false)
-    @JsonIgnore
     private Doctor doctor;
 
     @Enumerated(EnumType.STRING)
@@ -34,10 +33,12 @@ public class Schedule {
     private Weekdays weekday;
 
     @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime start_time;
+    @Column(name = "start_time")
+    private LocalTime startTime;
 
     @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime end_time;
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
     @CreatedDate
     private LocalDateTime created_at;

@@ -1,5 +1,5 @@
 CREATE TYPE gender_enum AS ENUM ('MALE', 'FEMALE');
-CREATE TYPE weekdays_enum AS ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
+CREATE TYPE weekdays_enum AS ENUM ('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY');
 
 CREATE TABLE IF NOT EXISTS doctor (
     id TEXT NOT NULL PRIMARY KEY,
@@ -42,7 +42,7 @@ INSERT INTO doctor (id, firstname, lastname, specialization, email, phone, gende
 CREATE TABLE IF NOT EXISTS schedule (
     id TEXT PRIMARY KEY,
     doctor_id TEXT NOT NULL,
-    weekday weekdays_enum,
+    weekday TEXT NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

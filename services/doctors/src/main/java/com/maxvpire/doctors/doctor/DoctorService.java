@@ -2,6 +2,7 @@ package com.maxvpire.doctors.doctor;
 
 import com.maxvpire.doctors.doctor.dto.DoctorRequest;
 import com.maxvpire.doctors.doctor.dto.DoctorResponse;
+import com.maxvpire.doctors.schedule.ScheduleService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
+    private final ScheduleService scheduleService;
 
     public String create(DoctorRequest request) {
         Doctor doctor = Doctor.builder()
@@ -71,6 +73,7 @@ public class DoctorService {
                 .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
         doctor.set_active(false);
         doctorRepository.save(doctor);
+        scheduleService.deleteByDoctorId(id);
     }
 
     public void activeDoctor(String id) {
@@ -86,6 +89,7 @@ public class DoctorService {
                 .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
         doctor.setDeleted(true);
         doctorRepository.save(doctor);
+        scheduleService.deleteByDoctorId(id);
     }
 
     public void restoreDoctor(String id) {

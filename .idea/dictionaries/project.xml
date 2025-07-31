@@ -3,6 +3,8 @@
     <words>
       <w>initdb</w>
       <w>pgdata</w>
+      <w>startime</w>
+      <w>starttime</w>
     </words>
   </dictionary>
 </component>
