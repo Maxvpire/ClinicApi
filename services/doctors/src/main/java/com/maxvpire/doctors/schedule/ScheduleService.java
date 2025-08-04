@@ -1,9 +1,9 @@
 package com.maxvpire.doctors.schedule;
 
 import com.maxvpire.doctors.doctor.DoctorRepository;
+import com.maxvpire.doctors.exception.ScheduleNotFoundException;
 import com.maxvpire.doctors.schedule.dto.ScheduleRequest;
 import com.maxvpire.doctors.schedule.dto.ScheduleResponse;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class ScheduleService {
 
     public String addSchedule(ScheduleRequest request) {
         this.doctorRepository.findById(request.doctor().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Doctor not found!"));
+                .orElseThrow(() -> new ScheduleNotFoundException("Doctor not found!"));
 
         Schedule schedule = Schedule.builder()
                     .doctor(request.doctor())
@@ -41,7 +41,7 @@ public class ScheduleService {
     public ScheduleResponse findById(String id) {
         return scheduleRepository.findById(id)
                 .map(scheduleMapper::toScheduleResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Schedule not found!"));
+                .orElseThrow(() -> new ScheduleNotFoundException("Schedule not found!"));
     }
 
     public List<ScheduleResponse> findByWeekdays(Weekdays weekday) {
@@ -69,7 +69,7 @@ public class ScheduleService {
 
     public void deleteById(String id) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Schedule not found!"));
+                .orElseThrow(() -> new ScheduleNotFoundException("Schedule not found!"));
         scheduleRepository.delete(schedule);
     }
 

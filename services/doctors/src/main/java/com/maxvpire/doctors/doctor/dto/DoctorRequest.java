@@ -1,12 +1,14 @@
 package com.maxvpire.doctors.doctor.dto;
 
 import com.maxvpire.doctors.doctor.Gender;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+@Valid
 public record DoctorRequest(
         @NotNull(message = "Firstname is required!")
         String firstname,

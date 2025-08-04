@@ -3,11 +3,13 @@ package com.maxvpire.patients.patient.dto;
 
 import com.maxvpire.patients.patient.Address;
 import com.maxvpire.patients.patient.Gender;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+@Valid
 public record PatientRequest(
         @NotNull(message = "Patient's firstname is required!")
         String firstname,

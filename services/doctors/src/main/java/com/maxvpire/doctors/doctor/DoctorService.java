@@ -2,8 +2,8 @@ package com.maxvpire.doctors.doctor;
 
 import com.maxvpire.doctors.doctor.dto.DoctorRequest;
 import com.maxvpire.doctors.doctor.dto.DoctorResponse;
+import com.maxvpire.doctors.exception.DoctorNotFoundException;
 import com.maxvpire.doctors.schedule.ScheduleService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -43,13 +43,13 @@ public class DoctorService {
     public DoctorResponse findById(String id) {
         return doctorRepository.findById(id)
                 .map(doctorMapper::toDoctorResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
     }
 
 
     public void updateDoctor(String id, DoctorRequest request) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
         mergeDoctor(doctor, request);
         doctorRepository.save(doctor);
     }
@@ -70,7 +70,7 @@ public class DoctorService {
 
     public void inActiveDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
         doctor.set_active(false);
         doctorRepository.save(doctor);
         scheduleService.deleteByDoctorId(id);
@@ -78,7 +78,7 @@ public class DoctorService {
 
     public void activeDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
         doctor.set_active(true);
         doctorRepository.save(doctor);
     }
@@ -86,7 +86,7 @@ public class DoctorService {
 
     public void delete(String id) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
         doctor.setDeleted(true);
         doctorRepository.save(doctor);
         scheduleService.deleteByDoctorId(id);
@@ -94,7 +94,7 @@ public class DoctorService {
 
     public void restoreDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with id: " + id + " not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
         doctor.setDeleted(false);
         doctorRepository.save(doctor);
     }
@@ -116,12 +116,12 @@ public class DoctorService {
     public DoctorResponse findByEmail(String email) {
         return doctorRepository.findDoctorByEmail(email)
                 .map(doctorMapper::toDoctorResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with this email is not found!"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with this email is not found!"));
     }
 
     public DoctorResponse findByPhone(String phone) {
         return doctorRepository.findDoctorByPhone(phone)
                 .map(doctorMapper::toDoctorResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Doctor with this phone number is not found!"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with this phone number is not found!"));
     }
 }
