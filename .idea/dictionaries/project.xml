@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>initdb</w>
+      <w>medicalrecords</w>
       <w>pgdata</w>
       <w>roomtype</w>
       <w>roomtypes</w>

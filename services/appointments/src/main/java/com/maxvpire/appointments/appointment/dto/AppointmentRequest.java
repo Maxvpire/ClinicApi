@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Valid
 public record AppointmentRequest(
         @NotNull
         String patientId,

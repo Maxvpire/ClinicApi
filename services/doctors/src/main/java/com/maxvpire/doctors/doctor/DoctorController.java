@@ -20,7 +20,7 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.create(request));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<DoctorResponse>> getDoctor() {
         return ResponseEntity.ok(doctorService.findAll());
     }

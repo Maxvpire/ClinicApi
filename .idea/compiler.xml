@@ -10,21 +10,23 @@
         <module name="config-server" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for appointments" enabled="true">
+      <profile name="Annotation profile for medicalrecords" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="medical-records" />
         <module name="appointments" />
+        <module name="medicalrecords" />
         <module name="doctors" />
         <module name="patients" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ClinicApi" target="24" />
+      <module name="medical-record" target="11" />
+      <module name="medical-records" target="24" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -34,7 +36,9 @@
       <module name="config-server" options="-parameters" />
       <module name="discovery" options="-parameters" />
       <module name="doctors" options="-parameters" />
+      <module name="medical-record" options="-parameters" />
       <module name="medical-records" options="-parameters" />
+      <module name="medicalrecords" options="-parameters" />
       <module name="patients" options="-parameters" />
     </option>
   </component>

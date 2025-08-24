@@ -60,7 +60,7 @@ services:
     ports:
       - "9042:9042"
     environment:
-      CASSANDRA_CLUSTER_NAME: "MedicalRecords"
+      CASSANDRA_CLUSTER_NAME: "medical_records"
       CASSANDRA_DC: "datacenter1"
       CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
       CASSANDRA_AUTHENTICATOR: PasswordAuthenticator
