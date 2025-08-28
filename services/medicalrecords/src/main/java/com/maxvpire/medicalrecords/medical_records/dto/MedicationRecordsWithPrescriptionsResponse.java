@@ -1,6 +1,5 @@
 package com.maxvpire.medicalrecords.medical_records.dto;
 
-import com.maxvpire.medicalrecords.prescriptions.Prescriptions;
 import com.maxvpire.medicalrecords.prescriptions.dto.PrescriptionResponse;
 
 import java.time.LocalDateTime;

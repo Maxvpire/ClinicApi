@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/appointment")
+@RequestMapping("/api/v1/appointment")
 @RequiredArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;

@@ -10,7 +10,7 @@
         <module name="config-server" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for medicalrecords" enabled="true">
+      <profile name="Annotation profile for doctors" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -20,6 +20,7 @@
         <module name="appointments" />
         <module name="medicalrecords" />
         <module name="doctors" />
+        <module name="administration" />
         <module name="patients" />
       </profile>
     </annotationProcessing>
@@ -32,6 +33,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ClinicApi" options="-parameters" />
+      <module name="administration" options="-parameters" />
       <module name="appointments" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery" options="-parameters" />

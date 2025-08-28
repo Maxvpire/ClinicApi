@@ -12,6 +12,7 @@ public record ScheduleDoctorResponse(
         String specialization,
         String email,
         String phone,
+        String avatar,
         Gender gender,
         boolean isActive,
         boolean deleted,

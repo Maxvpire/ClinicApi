@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS doctor (
     specialization VARCHAR(255) NOT NULL,
     email TEXT NOT NULL UNIQUE,
     phone TEXT NOT NULL UNIQUE,
+    avatar TEXT UNIQUE,
     gender gender_enum NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     dateofbirth DATE NOT NULL,

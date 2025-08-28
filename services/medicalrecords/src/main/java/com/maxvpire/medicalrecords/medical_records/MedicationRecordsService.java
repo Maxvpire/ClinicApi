@@ -1,5 +1,6 @@
 package com.maxvpire.medicalrecords.medical_records;
 
+import com.maxvpire.medicalrecords.exception.MedicalRecordNotFoundException;
 import com.maxvpire.medicalrecords.medical_records.dto.MedicationRecordRequest;
 import com.maxvpire.medicalrecords.medical_records.dto.MedicationRecordUpdateRequest;
 import com.maxvpire.medicalrecords.medical_records.dto.MedicationRecordsWithPrescriptionsResponse;
@@ -39,7 +40,7 @@ public class MedicationRecordsService {
     public MedicationRecordsWithPrescriptionsResponse findById(String id) {
         return medicationRecordsRepository.findById(id)
                 .map(medicationRecordsMapper::toMedicationRecords)
-                .orElseThrow(() -> new RuntimeException("Medication records with id " + id + " not found!"));
+                .orElseThrow(() -> new MedicalRecordNotFoundException("Medication records with id " + id + " not found!"));
     }
 
     public List<MedicationRecordsWithPrescriptionsResponse> findByPatientId(String id) {
@@ -60,7 +61,7 @@ public class MedicationRecordsService {
     public MedicationRecordsWithPrescriptionsResponse findByAppointmentId(String id) {
         return medicationRecordsRepository.findByAppointmentId(id)
                 .map(medicationRecordsMapper::toMedicationRecords)
-                .orElseThrow(() -> new RuntimeException("Medication records with appointment id " + id + " not found!"));
+                .orElseThrow(() -> new MedicalRecordNotFoundException("Medication records with appointment id " + id + " not found!"));
     }
 
 
@@ -73,7 +74,7 @@ public class MedicationRecordsService {
 
     public void update(String id, MedicationRecordUpdateRequest request) {
         MedicalRecords medicalRecords = medicationRecordsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Medication record with id " + id + " not found!"));
+                .orElseThrow(() -> new MedicalRecordNotFoundException("Medication record with id " + id + " not found!"));
 
         mergeRecord(medicalRecords, request);
         medicationRecordsRepository.save(medicalRecords);

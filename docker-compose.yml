@@ -29,6 +29,19 @@ services:
       - microservices-net
     restart: unless-stopped
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: maxvpire
+      MINIO_ROOT_PASSWORD: max26156
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
   mongo:
     image: mongo:7.0
     container_name: mongo
@@ -53,25 +66,6 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: strongpassword
-
-  cassandra:
-    image: cassandra:5.0
-    container_name: cassandra
-    ports:
-      - "9042:9042"
-    environment:
-      CASSANDRA_CLUSTER_NAME: "medical_records"
-      CASSANDRA_DC: "datacenter1"
-      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
-      CASSANDRA_AUTHENTICATOR: PasswordAuthenticator
-    volumes:
-      - cassandra_data:/var/lib/cassandra
-    healthcheck:
-      test: [ "CMD", "cqlsh", "-u", "cassandra", "-p", "cassandra", "-e", "DESCRIBE KEYSPACES" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -119,3 +113,4 @@ volumes:
   pgadmin:
   mongo_data:
   cassandra_data:
+  minio_data:

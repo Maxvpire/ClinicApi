@@ -32,6 +32,7 @@ public class DoctorMapper {
                 doctor.getSpecialization(),
                 doctor.getEmail(),
                 doctor.getPhone(),
+                doctor.getAvatar(),
                 doctor.getGender(),
                 doctor.is_active(),
                 doctor.isDeleted(),

@@ -46,6 +46,14 @@ public class DoctorService {
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
     }
 
+    public void uploadAvatar(String id, String filename) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
+
+        doctor.setAvatar(filename);
+        doctorRepository.save(doctor);
+    }
+
 
     public void updateDoctor(String id, DoctorRequest request) {
         Doctor doctor = doctorRepository.findById(id)
