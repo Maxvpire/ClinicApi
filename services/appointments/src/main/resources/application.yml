@@ -3,3 +3,8 @@ spring:
     import: optional:configserver:http://localhost:8888
   application:
     name: appointments-service
+  kafka:
+      bootstrap-servers: host.docker.internal:9092
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer

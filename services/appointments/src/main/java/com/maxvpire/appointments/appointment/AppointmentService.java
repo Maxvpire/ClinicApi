@@ -3,6 +3,7 @@ package com.maxvpire.appointments.appointment;
 import com.maxvpire.appointments.appointment.dto.AppointmentRequest;
 import com.maxvpire.appointments.exception.AppointmentNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
 
     public String create(AppointmentRequest request) {
@@ -25,6 +27,8 @@ public class AppointmentService {
                 .roomId(request.roomId())
                 .notes(request.notes())
                 .build();
+        kafkaTemplate.send("appointment-topic", "ready");
+        System.out.println("Sent: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return appointmentRepository.save(appointment).getId();
     }
 

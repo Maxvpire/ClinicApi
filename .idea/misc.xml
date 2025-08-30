@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/services/medical-records/pom.xml" />
         <option value="$PROJECT_DIR$/services/medicalrecords/pom.xml" />
         <option value="$PROJECT_DIR$/services/administration/pom.xml" />
+        <option value="$PROJECT_DIR$/services/rates/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

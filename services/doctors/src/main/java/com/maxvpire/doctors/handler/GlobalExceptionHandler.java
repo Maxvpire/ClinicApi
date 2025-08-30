@@ -1,6 +1,8 @@
 package com.maxvpire.doctors.handler;
 
 import com.maxvpire.doctors.exception.DoctorNotFoundException;
+import com.maxvpire.doctors.exception.NotValidGenderTypeException;
+import com.maxvpire.doctors.exception.RepeatedActionException;
 import com.maxvpire.doctors.exception.ScheduleNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleScheduleNotFoundException(ScheduleNotFoundException exp) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(exp.getMessage());
+    }
+
+    @ExceptionHandler(RepeatedActionException.class)
+    public ResponseEntity<String> handleRepeatedActionException(RepeatedActionException exp) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMessage());
+    }
+
+    @ExceptionHandler(NotValidGenderTypeException.class)
+    public ResponseEntity<String> handleNotValidGenderTypeException(NotValidGenderTypeException exp) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(exp.getMessage());
     }
 

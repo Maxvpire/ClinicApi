@@ -50,6 +50,11 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.findByPhone(phone));
     }
 
+    @GetMapping("/gender/{gender}")
+    public ResponseEntity<List<DoctorResponse>> getDoctorByGender(@PathVariable String gender) {
+        return ResponseEntity.ok(doctorService.getByGender(gender));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Void> updateDoctor(
             @PathVariable String id,

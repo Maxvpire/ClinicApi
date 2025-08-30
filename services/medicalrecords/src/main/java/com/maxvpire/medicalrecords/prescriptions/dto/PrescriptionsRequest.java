@@ -3,19 +3,19 @@ package com.maxvpire.medicalrecords.prescriptions.dto;
 import jakarta.validation.constraints.NotNull;
 
 public record PrescriptionsRequest(
-        @NotNull
+        @NotNull(message = "Medication record is mandatory!")
         String medical_records_id,
 
-        @NotNull
+        @NotNull(message = "Medication name is mandatory!")
         String medicationName,
 
-        @NotNull
+        @NotNull(message = "You have to give dosage too!")
         String dosage,
 
-        @NotNull
+        @NotNull(message = "You have to give frequency too!")
         String frequency,
 
-        @NotNull
+        @NotNull(message = "You have to give duration as well!")
         String duration
         ) {
 }

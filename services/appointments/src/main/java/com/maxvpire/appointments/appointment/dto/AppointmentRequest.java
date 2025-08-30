@@ -9,20 +9,20 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record AppointmentRequest(
-        @NotNull
+        @NotNull(message = "Patient is mandatory!")
         String patientId,
 
-        @NotNull
+        @NotNull(message = "Doctor is mandatory!")
         String doctorId,
 
-        @NotNull
+        @NotNull(message = "Date is mandatory!")
         LocalDate date,
 
-        @NotNull
+        @NotNull(message = "Give starting time of the appointment!")
         @DateTimeFormat(pattern = "HH:mm")
         LocalTime start,
 
-        @NotNull
+        @NotNull(message = "Room is mandatory!")
         String roomId,
 
         AppointmentStatus status,

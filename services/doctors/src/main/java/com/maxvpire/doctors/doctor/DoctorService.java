@@ -3,6 +3,8 @@ package com.maxvpire.doctors.doctor;
 import com.maxvpire.doctors.doctor.dto.DoctorRequest;
 import com.maxvpire.doctors.doctor.dto.DoctorResponse;
 import com.maxvpire.doctors.exception.DoctorNotFoundException;
+import com.maxvpire.doctors.exception.NotValidGenderTypeException;
+import com.maxvpire.doctors.exception.RepeatedActionException;
 import com.maxvpire.doctors.schedule.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
@@ -79,32 +81,52 @@ public class DoctorService {
     public void inActiveDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
-        doctor.set_active(false);
-        doctorRepository.save(doctor);
-        scheduleService.deleteByDoctorId(id);
+        if(doctor.is_active()){
+            doctor.set_active(false);
+            doctorRepository.save(doctor);
+            scheduleService.deleteByDoctorId(id);
+        }
+        else {
+            throw new RepeatedActionException("You can't inactivate inactive doctor");
+        }
     }
 
     public void activeDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
-        doctor.set_active(true);
-        doctorRepository.save(doctor);
+        if(!doctor.is_active()){
+            doctor.set_active(true);
+            doctorRepository.save(doctor);
+        }
+        else{
+            throw new RepeatedActionException("You can't activate active doctor!");
+        }
     }
 
 
     public void delete(String id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
-        doctor.setDeleted(true);
-        doctorRepository.save(doctor);
-        scheduleService.deleteByDoctorId(id);
+        if(!doctor.isDeleted()){
+            doctor.setDeleted(true);
+            doctorRepository.save(doctor);
+            scheduleService.deleteByDoctorId(id);
+        }
+        else {
+            throw new RepeatedActionException("You can't delete deleted doctor!");
+        }
     }
 
     public void restoreDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
-        doctor.setDeleted(false);
-        doctorRepository.save(doctor);
+        if(doctor.isDeleted()){
+            doctor.setDeleted(false);
+            doctorRepository.save(doctor);
+        }
+        else {
+            throw new RepeatedActionException("You can't restore not deleted doctor!");
+        }
     }
 
     public List<DoctorResponse> searchByName(String name) {
@@ -131,5 +153,17 @@ public class DoctorService {
         return doctorRepository.findDoctorByPhone(phone)
                 .map(doctorMapper::toDoctorResponse)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with this phone number is not found!"));
+    }
+
+    public List<DoctorResponse> getByGender(String gender) {
+        if (gender.equals("MALE") || gender.equals("FEMALE")) {
+            Gender g = gender.equals("MALE") ? Gender.MALE : Gender.FEMALE;
+            return doctorRepository.getDoctorByGender(g)
+                    .stream()
+                    .map(doctorMapper::toDoctorResponse)
+                    .collect(Collectors.toList());
+        }else{
+            throw new NotValidGenderTypeException("Gender type not supported");
+        }
     }
 }

@@ -25,5 +25,19 @@
       <jdbc-url>jdbc:postgresql://ep-solitary-frog-a283lfjt-pooler.eu-central-1.aws.neon.tech:5432/medicalrecords</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="administration" uuid="f7fab8e0-043e-489f-a8d2-bbae334927ae">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ep-solitary-frog-a283lfjt-pooler.eu-central-1.aws.neon.tech/administration?sslmode=require&amp;channelBinding=require</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="rates_keyspace@host.docker.internal" uuid="a27cd84c-2856-4beb-88e4-75d78b74a0b6">
+      <driver-ref>cassandra</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.ing.data.cassandra.jdbc.CassandraDriver</jdbc-driver>
+      <jdbc-url>jdbc:cassandra://host.docker.internal:9042/rates_keyspace</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

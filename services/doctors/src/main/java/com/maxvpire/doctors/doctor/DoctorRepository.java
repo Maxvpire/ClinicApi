@@ -14,6 +14,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
     List<Doctor> searchByName(@Param("query") String query);
     @Query("SELECT u FROM Doctor u WHERE u.phone LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Doctor> searchByPhone(@Param("query") String query);
+    List<Doctor> getDoctorByGender(Gender gender);
     Optional<Doctor> findDoctorByEmail(String email);
     Optional<Doctor> findDoctorByPhone(String phoneNumber);
 }

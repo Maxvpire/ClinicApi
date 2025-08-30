@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public record RoomtypeRequest(
-        @NotNull
+        @NotNull(message = "Room type is mandatory!")
         String type,
         String description
 ) {

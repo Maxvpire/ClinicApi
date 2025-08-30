@@ -32,11 +32,11 @@ public class Administration {
     @Column(updatable = false, nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(columnDefinition = "true", name = "is_active")
-    private boolean isActive;
+    @Column(name = "is_active", columnDefinition = "true")
+    private boolean active;
     @Column(columnDefinition = "false")
     private boolean deleted;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "date_of_birth")
     private LocalDate dateOfBirth;
     @Column(updatable = false, name = "created_at")
     @CreatedDate
