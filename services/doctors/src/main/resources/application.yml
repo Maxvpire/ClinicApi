@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: doctors-service
+
+minio:
+  url: http://localhost:9000
+  access-key: maxvpire
+  secret-key: max26156
+  bucket:
+   name: doctors

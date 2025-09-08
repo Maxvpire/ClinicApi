@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="127.0.0.1" id="729d8d6d-f646-422d-8009-261cc13b0f3f" port="22" customName="UbuntuServerVBox" nameFormat="CUSTOM" username="maxvpire" useOpenSSHConfig="true">
+        <option name="customName" value="UbuntuServerVBox" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>
