@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ep-solitary-frog-a283lfjt-pooler.eu-central-1.aws.neon.tech/users?user=neondb_owner&password=npg_ZXca5D2COgIr&sslmode=require&channelBinding=require
+    username: neondb_owner
+    password: npg_ZXca5D2COgIr
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+      hibernate:
+        ddl-auto: none
+      show-sql: true
+
+  flyway:
+      enabled: true
+      baseline-on-migrate: true
+      baseline-description: "init"
+      baseline-version: 0
+      user: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+
+server:
+    port: 7722

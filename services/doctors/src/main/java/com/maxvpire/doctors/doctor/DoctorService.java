@@ -2,12 +2,14 @@ package com.maxvpire.doctors.doctor;
 
 import com.maxvpire.doctors.doctor.dto.DoctorRequest;
 import com.maxvpire.doctors.doctor.dto.DoctorResponse;
+import com.maxvpire.doctors.doctor.dto.DoctorTopicResponse;
 import com.maxvpire.doctors.exception.DoctorNotFoundException;
 import com.maxvpire.doctors.exception.NotValidGenderTypeException;
 import com.maxvpire.doctors.exception.RepeatedActionException;
 import com.maxvpire.doctors.schedule.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
     private final ScheduleService scheduleService;
+    private final KafkaTemplate<String, DoctorTopicResponse> kafkaTemplate;
 
     public String create(DoctorRequest request) {
         Doctor doctor = Doctor.builder()
@@ -30,8 +33,14 @@ public class DoctorService {
                 .specialization(request.specialization())
                 .gender(request.gender())
                 .build();
+        DoctorTopicResponse response = DoctorTopicResponse.builder()
+                .id(doctor.getId())
+                .phone(doctor.getPhone())
+                .build();
+        kafkaTemplate.send("doctors", response);
         return doctorRepository.save(doctor).getId();
     }
+
 
     public List<DoctorResponse> findAll() {
         return doctorRepository.findAll()

@@ -35,7 +35,6 @@ public class MedicationRecordsService {
     @KafkaListener(topics = "appointments", groupId = "my-consumer-group-2", containerFactory = "kafkaListenerContainerFactory")
     public String listen(ConsumerRecord<String, Object> message) {
         try {
-            System.out.println("Consumer received message: " + message.value() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             ObjectMapper mapper = new ObjectMapper();
             String json = message.value().toString();
             KafkaResponse kafkaResponse = mapper.readValue(json, KafkaResponse.class);
