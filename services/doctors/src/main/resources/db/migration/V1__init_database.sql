@@ -1,4 +1,3 @@
-CREATE TYPE gender_enum AS ENUM ('MALE', 'FEMALE');
 CREATE TYPE weekdays_enum AS ENUM ('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY');
 
 CREATE TABLE IF NOT EXISTS doctor (
@@ -9,7 +8,7 @@ CREATE TABLE IF NOT EXISTS doctor (
     email TEXT NOT NULL UNIQUE,
     phone TEXT NOT NULL UNIQUE,
     avatar TEXT UNIQUE,
-    gender gender_enum NOT NULL,
+    gender TEXT NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     dateofbirth DATE NOT NULL,
     deleted BOOLEAN DEFAULT FALSE,

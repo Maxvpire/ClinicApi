@@ -1,16 +1,14 @@
-CREATE TYPE role_enum AS ENUM ('ADMINISTRATION', 'PATIENT', 'DOCTOR')
-
 CREATE TABLE IF NOT EXISTS users(
-    id TEXT NOT NULL PRIMARY KEY,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    user_id TEXT NOT NULL UNIQUE,
-    user_role role_enum() NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                    id TEXT NOT NULL PRIMARY KEY,
+                                    username TEXT NOT NULL UNIQUE,
+                                    password TEXT NOT NULL,
+                                    main_id TEXT NOT NULL UNIQUE,
+                                    user_role TEXT NOT NULL,
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (id, username, password, user_id, user_role)
+INSERT INTO users (id, username, password, main_id, user_role)
 VALUES
     ('1a2b3c4d-1111-2222-3333-444455556666', '998901234567', '998901234567', 'u001', 'ADMINISTRATION'),
     ('2b3c4d5e-2222-3333-4444-555566667777', '998902345678', '998902345678', 'u002', 'PATIENT'),

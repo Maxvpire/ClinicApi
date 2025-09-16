@@ -1,6 +1,8 @@
 package com.maxvpire.doctors.doctor.dto;
 
 import com.maxvpire.doctors.doctor.Gender;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +21,7 @@ public record DoctorRequest(
         @NotNull(message = "Phone number is required!")
         String phone,
         @NotNull(message = "Gender is required; And have to be MALE or Female!")
+        @Enumerated(EnumType.STRING)
         Gender gender,
         @NotNull(message = "Date of birthday is required!")
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

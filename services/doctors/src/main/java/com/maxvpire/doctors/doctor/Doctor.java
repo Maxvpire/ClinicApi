@@ -37,8 +37,8 @@ public class Doctor {
     @Column(unique = true)
     private String avatar;
 
-    @Column(updatable = false)
     @Enumerated(EnumType.STRING)
+    @Column(updatable = false)
     private Gender gender;
 
     @Column(columnDefinition = "true")

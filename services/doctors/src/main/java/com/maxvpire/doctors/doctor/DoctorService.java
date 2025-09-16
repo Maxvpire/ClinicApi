@@ -6,13 +6,16 @@ import com.maxvpire.doctors.doctor.dto.DoctorTopicResponse;
 import com.maxvpire.doctors.exception.DoctorNotFoundException;
 import com.maxvpire.doctors.exception.NotValidGenderTypeException;
 import com.maxvpire.doctors.exception.RepeatedActionException;
+import com.maxvpire.doctors.exception.UniqueException;
 import com.maxvpire.doctors.schedule.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +25,14 @@ public class DoctorService {
     private final DoctorMapper doctorMapper;
     private final ScheduleService scheduleService;
     private final KafkaTemplate<String, DoctorTopicResponse> kafkaTemplate;
+    private final KafkaTemplate<String, String> deleteDoctorProducerFactory;
+
 
     public String create(DoctorRequest request) {
+
+        if(!request.gender().equals(Gender.MALE) && !request.gender().equals(Gender.FEMALE)){
+            throw new NotValidGenderTypeException("This gender is not valid!");
+        }
         Doctor doctor = Doctor.builder()
                 .firstname(request.firstname())
                 .lastname(request.lastname())
@@ -33,12 +42,17 @@ public class DoctorService {
                 .specialization(request.specialization())
                 .gender(request.gender())
                 .build();
+
+        String doctorId = doctorRepository.save(doctor).getId();
+
         DoctorTopicResponse response = DoctorTopicResponse.builder()
-                .id(doctor.getId())
+                .id(doctorId)
                 .phone(doctor.getPhone())
                 .build();
+
         kafkaTemplate.send("doctors", response);
-        return doctorRepository.save(doctor).getId();
+
+        return doctorId;
     }
 
 
@@ -120,6 +134,7 @@ public class DoctorService {
             doctor.setDeleted(true);
             doctorRepository.save(doctor);
             scheduleService.deleteByDoctorId(id);
+            deleteDoctorProducerFactory.send("delete-doctors", doctor.getId());
         }
         else {
             throw new RepeatedActionException("You can't delete deleted doctor!");

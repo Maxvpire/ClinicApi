@@ -11,4 +11,9 @@ public class KafkaTopicConfig {
     public NewTopic doctorTopic() {
         return TopicBuilder.name("doctors").build();
     }
+
+    @Bean
+    public NewTopic doctorDeletedTopic() {
+        return TopicBuilder.name("delete-doctors").build();
+    }
 }

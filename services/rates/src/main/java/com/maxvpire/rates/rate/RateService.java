@@ -7,7 +7,6 @@ import com.maxvpire.rates.rate.dto.DoctorOverageResponse;
 import com.maxvpire.rates.rate.dto.GetRateRequest;
 import com.maxvpire.rates.rate.dto.RateRequest;
 import com.maxvpire.rates.rate.dto.RateResponse;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

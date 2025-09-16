@@ -22,7 +22,6 @@ import java.util.List;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final RoomRepository roomRepository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
     private final KafkaTemplate<String, RatesKafkaResponse> ratesKafkaTemplate;
 
 

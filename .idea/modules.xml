@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ClinicApiProject.iml" filepath="$PROJECT_DIR$/.idea/ClinicApiProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/services/doctors/doctors.iml" filepath="$PROJECT_DIR$/services/doctors/doctors.iml" />
+      <module fileurl="file://$PROJECT_DIR$/services/users/users.iml" filepath="$PROJECT_DIR$/services/users/users.iml" />
     </modules>
   </component>
 </project>

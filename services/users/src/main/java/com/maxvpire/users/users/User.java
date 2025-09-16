@@ -27,8 +27,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true, name = "user_id")
-    private String userId;
+    @Column(nullable = false, unique = true, name = "main_id")
+    private String mainId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "user_role")

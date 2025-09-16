@@ -1,16 +1,15 @@
 package com.maxvpire.doctors.handler;
 
-import com.maxvpire.doctors.exception.DoctorNotFoundException;
-import com.maxvpire.doctors.exception.NotValidGenderTypeException;
-import com.maxvpire.doctors.exception.RepeatedActionException;
-import com.maxvpire.doctors.exception.ScheduleNotFoundException;
+import com.maxvpire.doctors.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 @RestControllerAdvice
@@ -36,8 +35,30 @@ public class GlobalExceptionHandler {
                 .body(exp.getMessage());
     }
 
+    @ExceptionHandler(UniqueException.class)
+    public ResponseEntity<String>  handleUniqueException(UniqueException exp) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException exp) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMessage());
+    }
+
+
     @ExceptionHandler(NotValidGenderTypeException.class)
     public ResponseEntity<String> handleNotValidGenderTypeException(NotValidGenderTypeException exp) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMessage());
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<String> handleSQLException(SQLException exp) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exp.getMessage());

@@ -76,7 +76,7 @@ public class DoctorController {
         return ResponseEntity.accepted().build();
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable String id){
         this.doctorService.delete(id);
         return ResponseEntity.accepted().build();
