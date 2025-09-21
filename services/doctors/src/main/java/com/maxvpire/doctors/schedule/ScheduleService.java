@@ -1,6 +1,7 @@
 package com.maxvpire.doctors.schedule;
 
 import com.maxvpire.doctors.doctor.DoctorRepository;
+import com.maxvpire.doctors.exception.BusyException;
 import com.maxvpire.doctors.exception.ScheduleNotFoundException;
 import com.maxvpire.doctors.schedule.dto.ScheduleRequest;
 import com.maxvpire.doctors.schedule.dto.ScheduleResponse;

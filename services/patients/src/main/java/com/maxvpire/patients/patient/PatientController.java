@@ -67,7 +67,7 @@ public class PatientController {
         return ResponseEntity.ok(patientService.findByPhoneNumber(number));
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePatient(@PathVariable String id) {
         patientService.deletePatient(id);
         return ResponseEntity.accepted().build();

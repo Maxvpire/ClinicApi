@@ -10,7 +10,7 @@
         <module name="config-server" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for users" enabled="true">
+      <profile name="Annotation profile for administration" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -18,10 +18,10 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="appointments" />
-        <module name="doctors" />
         <module name="administration" />
-        <module name="rates" />
+        <module name="doctors" />
         <module name="patients" />
+        <module name="rates" />
         <module name="medicalrecords" />
         <module name="users" />
       </profile>

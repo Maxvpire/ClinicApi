@@ -64,6 +64,13 @@ public class GlobalExceptionHandler {
                 .body(exp.getMessage());
     }
 
+    @ExceptionHandler(BusyException.class)
+    public ResponseEntity<String> handleBusyException(BusyException exp) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exp.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException exp) {
         HashMap<String, String> errors = new HashMap<String, String>();

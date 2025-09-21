@@ -1,6 +1,9 @@
 package com.maxvpire.administration.administration;
 
 import com.maxvpire.administration.administration.dto.*;
+import com.maxvpire.administration.administration.events.AdministrationCreatedEvent;
+import com.maxvpire.administration.administration.events.AdministrationDeletedEvent;
+import com.maxvpire.administration.administration.events.EventService;
 import com.maxvpire.administration.exception.AdministrationNotFoundException;
 import com.maxvpire.administration.exception.NotValidGenderTypeException;
 import com.maxvpire.administration.exception.RepeatedActionException;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 public class AdministrationService {
     private final AdministrationRepository administrationRepository;
     private final AdministrationMapper administrationMapper;
+    private final EventService eventService;
 
     public List<AdministrationResponse> findAll() {
         return administrationRepository.findAll()
@@ -34,7 +38,14 @@ public class AdministrationService {
                 .gender(request.gender())
                 .dateOfBirth(request.dateOfBirth())
                 .build();
-        return administrationRepository.save(administration).getId();
+        Administration data = administrationRepository.save(administration);
+
+        AdministrationCreatedEvent event = AdministrationCreatedEvent.builder()
+                .id(data.getId())
+                .phone(data.getPhone())
+                .build();
+        eventService.sendEvent(event);
+        return data.getId();
     }
 
 
@@ -108,8 +119,12 @@ public class AdministrationService {
                 .orElseThrow(() -> new AdministrationNotFoundException("Administration not found!"));
 
         if(administration.isActive()){
-            administrationRepository.save(administration);
             administration.setActive(false);
+            administrationRepository.save(administration);
+            AdministrationDeletedEvent event = AdministrationDeletedEvent.builder()
+                    .id(administration.getId())
+                    .build();
+            eventService.sendEvent(event);
         }
         else {
             throw new RepeatedActionException("You can't inactive this administration because this administration have inactivated away!");
@@ -123,6 +138,11 @@ public class AdministrationService {
         if(!administration.isActive()){
             administration.setActive(true);
             administrationRepository.save(administration);
+            AdministrationCreatedEvent event = AdministrationCreatedEvent.builder()
+                    .id(administration.getId())
+                    .phone(administration.getPhone())
+                    .build();
+            eventService.sendEvent(event);
         }
         else{
             throw new RepeatedActionException("You can't activate active administration!");
@@ -136,6 +156,10 @@ public class AdministrationService {
         if(!administration.isDeleted()){
             administration.setDeleted(true);
             administrationRepository.save(administration);
+            AdministrationDeletedEvent event = AdministrationDeletedEvent.builder()
+                    .id(administration.getId())
+                    .build();
+            eventService.sendEvent(event);
         }
         else {
             throw new RepeatedActionException("You can't delete deleted administration!");
@@ -149,6 +173,11 @@ public class AdministrationService {
         if(administration.isDeleted()){
            administration.setDeleted(false);
            administrationRepository.save(administration);
+            AdministrationCreatedEvent event = AdministrationCreatedEvent.builder()
+                    .id(administration.getId())
+                    .phone(administration.getPhone())
+                    .build();
+            eventService.sendEvent(event);
         }
 
         else{

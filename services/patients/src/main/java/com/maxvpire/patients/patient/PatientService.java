@@ -2,11 +2,16 @@ package com.maxvpire.patients.patient;
 
 import com.maxvpire.patients.exception.PatientNotFoundException;
 import com.maxvpire.patients.exception.RepeatedActionException;
+import com.maxvpire.patients.patient.dto.PatientKafkaResponse;
 import com.maxvpire.patients.patient.dto.PatientRequest;
 import com.maxvpire.patients.patient.dto.PatientResponse;
 import com.maxvpire.patients.patient.dto.UpdatePatientRequest;
+import com.maxvpire.patients.patient.events.EventService;
+import com.maxvpire.patients.patient.events.PatientCreatedEvent;
+import com.maxvpire.patients.patient.events.PatientDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +22,24 @@ import java.util.stream.Collectors;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final KafkaTemplate<String, PatientKafkaResponse> kafkaTemplate;
+    private final EventService eventService;
 
     public String createPatient(PatientRequest request) {
         Patient patient = patientRepository.save(patientMapper.toPatient(request));
+
+        PatientKafkaResponse response = PatientKafkaResponse.builder()
+                .id(patient.getId())
+                .phone(patient.getPhone())
+                .build();
+
+        PatientCreatedEvent event = PatientCreatedEvent.builder()
+                .id(patient.getId())
+                .phone(patient.getPhone())
+                .build();
+
+        eventService.sendEvent(event);
+
         return patient.getId();
     }
 
@@ -70,6 +90,12 @@ public class PatientService {
             throw new RepeatedActionException("You can't delete deleted patient!");
         }
         patientRepository.save(patient);
+
+        PatientDeletedEvent event = PatientDeletedEvent.builder()
+                .id(patient.getId())
+                .build();
+
+        eventService.sendEvent(event);
     }
 
     public void restorePatient(String id) {
@@ -83,6 +109,12 @@ public class PatientService {
             throw new RepeatedActionException("You can't restore not deleted patient!");
         }
         patientRepository.save(patient);
+        PatientCreatedEvent event = PatientCreatedEvent.builder()
+                .id(patient.getId())
+                .phone(patient.getPhone())
+                .build();
+
+        eventService.sendEvent(event);
     }
 
     public List<PatientResponse> searchPatientByName(String name) {
@@ -108,6 +140,11 @@ public class PatientService {
             throw new RepeatedActionException("You can't ban banned patient!");
         }
         patientRepository.save(patient);
+        PatientDeletedEvent event = PatientDeletedEvent.builder()
+                .id(patient.getId())
+                .build();
+
+        eventService.sendEvent(event);
     }
 
     public void unBanPatient(String id) {
@@ -120,6 +157,12 @@ public class PatientService {
             throw new RepeatedActionException("You can't unban unbanned patient!");
         }
         patientRepository.save(patient);
+        PatientCreatedEvent event = PatientCreatedEvent.builder()
+                .id(patient.getId())
+                .phone(patient.getPhone())
+                .build();
+
+        eventService.sendEvent(event);
     }
 
     public List<PatientResponse> searchPatientByPhoneNumber(String phone) {

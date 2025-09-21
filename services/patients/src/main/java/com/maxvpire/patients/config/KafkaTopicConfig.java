@@ -1,4 +1,4 @@
-package com.maxvpire.doctors.config;
+package com.maxvpire.patients.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
     @Bean
-    public NewTopic doctorTopic() {
-        return TopicBuilder.name("doctors").build();
+    public NewTopic patientTopic() {
+        return TopicBuilder.name("patients").build();
     }
 }

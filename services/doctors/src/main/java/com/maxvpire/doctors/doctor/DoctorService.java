@@ -3,6 +3,10 @@ package com.maxvpire.doctors.doctor;
 import com.maxvpire.doctors.doctor.dto.DoctorRequest;
 import com.maxvpire.doctors.doctor.dto.DoctorResponse;
 import com.maxvpire.doctors.doctor.dto.DoctorTopicResponse;
+import com.maxvpire.doctors.doctor.events.DoctorCreatedEvent;
+import com.maxvpire.doctors.doctor.events.DoctorDeletedEvent;
+import com.maxvpire.doctors.doctor.events.EventMessage;
+import com.maxvpire.doctors.doctor.events.EventsService;
 import com.maxvpire.doctors.exception.DoctorNotFoundException;
 import com.maxvpire.doctors.exception.NotValidGenderTypeException;
 import com.maxvpire.doctors.exception.RepeatedActionException;
@@ -24,8 +28,7 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
     private final ScheduleService scheduleService;
-    private final KafkaTemplate<String, DoctorTopicResponse> kafkaTemplate;
-    private final KafkaTemplate<String, String> deleteDoctorProducerFactory;
+    private final EventsService eventsService;
 
 
     public String create(DoctorRequest request) {
@@ -33,6 +36,7 @@ public class DoctorService {
         if(!request.gender().equals(Gender.MALE) && !request.gender().equals(Gender.FEMALE)){
             throw new NotValidGenderTypeException("This gender is not valid!");
         }
+
         Doctor doctor = Doctor.builder()
                 .firstname(request.firstname())
                 .lastname(request.lastname())
@@ -44,14 +48,12 @@ public class DoctorService {
                 .build();
 
         String doctorId = doctorRepository.save(doctor).getId();
-
-        DoctorTopicResponse response = DoctorTopicResponse.builder()
+        DoctorCreatedEvent response = DoctorCreatedEvent.builder()
                 .id(doctorId)
                 .phone(doctor.getPhone())
                 .build();
 
-        kafkaTemplate.send("doctors", response);
-
+        eventsService.sendEvent(response);
         return doctorId;
     }
 
@@ -108,6 +110,7 @@ public class DoctorService {
             doctor.set_active(false);
             doctorRepository.save(doctor);
             scheduleService.deleteByDoctorId(id);
+            eventsService.sendEvent(new DoctorDeletedEvent(doctor.getId()));
         }
         else {
             throw new RepeatedActionException("You can't inactivate inactive doctor");
@@ -117,9 +120,16 @@ public class DoctorService {
     public void activeDoctor(String id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
+
+        DoctorTopicResponse response = DoctorTopicResponse.builder()
+                .id(doctor.getId())
+                .phone(doctor.getPhone())
+                .build();
+
         if(!doctor.is_active()){
             doctor.set_active(true);
             doctorRepository.save(doctor);
+            eventsService.sendEvent(new DoctorCreatedEvent(doctor.getId(), doctor.getPhone()));
         }
         else{
             throw new RepeatedActionException("You can't activate active doctor!");
@@ -134,7 +144,7 @@ public class DoctorService {
             doctor.setDeleted(true);
             doctorRepository.save(doctor);
             scheduleService.deleteByDoctorId(id);
-            deleteDoctorProducerFactory.send("delete-doctors", doctor.getId());
+            eventsService.sendEvent(new DoctorDeletedEvent(doctor.getId()));
         }
         else {
             throw new RepeatedActionException("You can't delete deleted doctor!");
@@ -147,6 +157,12 @@ public class DoctorService {
         if(doctor.isDeleted()){
             doctor.setDeleted(false);
             doctorRepository.save(doctor);
+            DoctorTopicResponse response = DoctorTopicResponse.builder()
+                    .id(doctor.getId())
+                    .phone(doctor.getPhone())
+                    .build();
+
+            eventsService.sendEvent(new DoctorCreatedEvent(doctor.getId(), doctor.getPhone()));
         }
         else {
             throw new RepeatedActionException("You can't restore not deleted doctor!");

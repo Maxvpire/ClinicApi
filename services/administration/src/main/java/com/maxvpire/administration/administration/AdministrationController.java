@@ -81,7 +81,7 @@ public class AdministrationController {
         return ResponseEntity.accepted().build();
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
         this.administrationService.deleteAdministration(id);
         return ResponseEntity.accepted().build();
