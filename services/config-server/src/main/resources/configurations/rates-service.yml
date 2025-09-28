@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ep-solitary-frog-a283lfjt-pooler.eu-central-1.aws.neon.tech:5432/rates
-    username: neondb_owner
-    password: npg_ZXca5D2COgIr
+    url: jdbc:postgresql://192.168.206.130:5432/rates
+    username: maxvpire
+    password: max26156
     driver-class-name: org.postgresql.Driver
 
   jpa:

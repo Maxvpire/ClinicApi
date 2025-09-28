@@ -1,6 +1,7 @@
 package com.maxvpire.patients.config;
 
 import com.maxvpire.patients.patient.dto.PatientKafkaResponse;
+import com.maxvpire.patients.patient.events.EventMessage;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

@@ -6,6 +6,6 @@ spring:
     import: optional:configserver:http://localhost:8888
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 192.168.206.130:9092
     consumer:
       group-id: doctors-consumer

@@ -11,7 +11,6 @@ import com.maxvpire.patients.patient.events.PatientCreatedEvent;
 import com.maxvpire.patients.patient.events.PatientDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,16 +21,10 @@ import java.util.stream.Collectors;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
-    private final KafkaTemplate<String, PatientKafkaResponse> kafkaTemplate;
     private final EventService eventService;
 
     public String createPatient(PatientRequest request) {
         Patient patient = patientRepository.save(patientMapper.toPatient(request));
-
-        PatientKafkaResponse response = PatientKafkaResponse.builder()
-                .id(patient.getId())
-                .phone(patient.getPhone())
-                .build();
 
         PatientCreatedEvent event = PatientCreatedEvent.builder()
                 .id(patient.getId())

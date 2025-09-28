@@ -25,6 +25,15 @@
         <module name="medicalrecords" />
         <module name="users" />
       </profile>
+      <profile name="Annotation profile for payment" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+        </processorPath>
+        <module name="payment" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ClinicApi" target="24" />
@@ -44,6 +53,7 @@
       <module name="medical-records" options="-parameters" />
       <module name="medicalrecords" options="-parameters" />
       <module name="patients" options="-parameters" />
+      <module name="payment" options="-parameters" />
       <module name="rates" options="-parameters" />
       <module name="users" options="-parameters" />
     </option>

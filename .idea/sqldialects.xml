@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/services/administration/src/main/resources/db/migration/V1__init_database.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/services/doctors/src/main/resources/db/migration/V1__init_database.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/services/medicalrecords/src/main/resources/db/migration/V1__init_database.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/services/payment/src/main/resources/db/migration/V1__init_database.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/services/rates/src/main/resources/db/migration/V1__init_database.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/services/users/src/main/resources/db/migration/V1__init_database.sql" dialect="GenericSQL" />
   </component>

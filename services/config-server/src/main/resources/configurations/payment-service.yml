@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.206.130:5432/payments
+    username: maxvpire
+    password: max26156
+    driver-class-name: org.postgresql.Driver
+
+    jpa:
+      hibernate:
+        ddl-auto: none
+      show-sql: true
+
+    flyway:
+      enabled: true
+      baseline-on-migrate: true
+      baseline-description: "init"
+      baseline-version: 0
+      user: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+
+
+  server:
+    port: 7733

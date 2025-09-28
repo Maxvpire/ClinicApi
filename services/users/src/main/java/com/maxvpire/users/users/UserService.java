@@ -2,10 +2,9 @@ package com.maxvpire.users.users;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.maxvpire.users.users.dto.KafkaAdministrationResponse;
-import com.maxvpire.users.users.dto.KafkaDoctorResponse;
-import com.maxvpire.users.users.dto.KafkaPatientResponse;
-import com.maxvpire.users.users.dto.UserResponse;
+import com.maxvpire.users.exception.PasswordNotMatchException;
+import com.maxvpire.users.exception.UserNotFoundException;
+import com.maxvpire.users.users.dto.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -173,11 +172,57 @@ public class UserService {
     }
 
 
-    public List<UserResponse> finaAllUsers() {
+    public List<UserResponse> findAllUsers() {
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
     }
 
+    public User findUserById(String id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+    }
+
+    public User findUserByUserName(String username) {
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+    }
+
+    public List<UserResponse> searchUsers(String username) {
+        return userRepository.findByUsernameContaining(username)
+                .stream()
+                .map(userMapper::toUserResponse)
+                .collect(Collectors.toList());
+    }
+
+    public User findByMainId(String id) {
+        return userRepository.findUserByMainId(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+    }
+
+    public void updateUsername(String id, String username) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+
+        user.setUsername(username);
+        userRepository.save(user);
+    }
+
+    public void updatePassword(String id, PasswordCheckRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+
+        boolean matches = passwordEncoder.matches(request.getCurrentPassword(), user.getPassword());
+
+        if (!matches) {
+            throw new PasswordNotMatchException("Invalid password!");
+        }
+
+        else{
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+        }
+
+    }
 }

@@ -19,7 +19,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://192.168.206.130:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql://192.168.206.130:5432/</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="rocky-server-db" uuid="0bf1208f-28f4-41a0-9b80-d681e9d22908">
