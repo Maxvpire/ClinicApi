@@ -5,13 +5,11 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 RUN chmod +x ./mvnw
-RUN ./mvnw dependency:go-offline
-COPY src src
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests -e -X
+
 
 # *** ADD THESE DEBUGGING LINES ***
-RUN ls -l /app
-RUN ls -l /app/target
+RUN echo "Contents of /app:" && ls -R /app
 # ********************************
 
 # Stage 2: Create the final, smaller runtime image
