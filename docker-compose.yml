@@ -47,7 +47,7 @@ services:
     container_name: mongo
     restart: unless-stopped
     ports:
-    - "27017:27017"
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -68,17 +68,17 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: strongpassword
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    container_name: zookeeper
-    restart: unless-stopped
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      image: confluentinc/cp-zookeeper:7.5.0
+      container_name: zookeeper
+      restart: unless-stopped
+      ports:
+        - "2181:2181"
+      environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+        ZOOKEEPER_TICK_TIME: 2000
 
-    networks:
-      microservices-net:
+      networks:
+        microservices-net:
 
   kafka:
       image: confluentinc/cp-kafka:7.5.0
@@ -107,6 +107,141 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+
+  config-server:
+    build: ./services/config-server
+    ports:
+      - "8888:8888"
+
+  discovery:
+    build: ./services/discovery
+    depends_on:
+      - config-server
+    ports:
+      - "8761:8761"
+
+  administration:
+    build: ./services/administration
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+    ports:
+      - "7744:7744"
+
+  appointments:
+    build: ./services/appointments
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+
+    ports:
+      - "7755:7755"
+
+  doctors:
+    build: ./services/doctors
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+    ports:
+      - "7799:7799"
+
+
+  medicalrecords:
+    build: ./services/medicalrecords
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+
+    ports:
+      - "7766:7766"
+
+
+  patients:
+    build: ./services/patients
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+
+    ports:
+      - "7788:7788"
+
+
+  payment:
+    build: ./services/payment
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+
+    ports:
+      - "7711:7711"
+
+
+  rates:
+    build: ./services/rates
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+
+    ports:
+      - "7733:7733"
+
+
+  users:
+    build: ./services/users
+    depends_on:
+      - postgres
+      - mongo
+      - kafka
+      - config-server
+      - discovery
+      - minio
+
+    ports:
+      - "7771:7771"
+
+  gateway:
+    build: ./services/gateway
+    depends_on:
+      - administration
+      - appointments
+      - discovery
+      - doctors
+      - config-server
+      - medicalrecords
+      - patients
+      - payment
+      - rates
+      - users
+
+
 
 
 networks:
