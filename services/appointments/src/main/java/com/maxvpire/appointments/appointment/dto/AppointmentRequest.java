@@ -1,7 +1,6 @@
 package com.maxvpire.appointments.appointment.dto;
 
 import com.maxvpire.appointments.appointment.AppointmentStatus;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,7 +26,6 @@ public record AppointmentRequest(
         @NotNull(message = "Room is mandatory!")
         String roomId,
 
-        AppointmentStatus status,
         String notes
 ) {
 }

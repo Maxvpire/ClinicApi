@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/services/config-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/discovery/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/doctors/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/services/gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/medical-record/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/medical-records/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/medicalrecords/src/main/java" charset="UTF-8" />

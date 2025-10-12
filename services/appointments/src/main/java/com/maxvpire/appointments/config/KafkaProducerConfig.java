@@ -1,14 +1,16 @@
 package com.maxvpire.appointments.config;
 
 import com.maxvpire.appointments.appointment.dto.RatesKafkaResponse;
+import com.maxvpire.appointments.appointment.events.EventMessage;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.core.*;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
@@ -28,14 +30,23 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String, String> stringProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
+
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate(
-            ProducerFactory<String, String> producerFactory
-    ) {
-        return new KafkaTemplate<>(producerFactory);
+    public KafkaTemplate<String, String> stringKafkaTemplate() {
+        return new KafkaTemplate<>(stringProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, EventMessage> eventMessageProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    @Bean
+    public KafkaTemplate<String, EventMessage> eventMessageKafkaTemplate() {
+        return new KafkaTemplate<>(eventMessageProducerFactory());
     }
 
     @Bean
@@ -48,10 +59,22 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, RatesKafkaResponse> ratesDtoKafkaTemplate(
-            ProducerFactory<String, RatesKafkaResponse> ratesDtoProducerFactory
-    ) {
-        return new KafkaTemplate<>(ratesDtoProducerFactory);
+    public KafkaTemplate<String, RatesKafkaResponse> ratesDtoKafkaTemplate() {
+        return new KafkaTemplate<>(ratesDtoProducerFactory());
     }
 
+    @Bean
+    public ConsumerFactory<String, EventMessage> consumerFactory() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "events-group");
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(
+                config,
+                new StringDeserializer(),
+                new JsonDeserializer<>(EventMessage.class, false)
+        );
+    }
 }
+

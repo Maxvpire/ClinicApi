@@ -19,5 +19,5 @@ spring:
       password: ${spring.datasource.password}
 
 
-  server:
-    port: 7733
+server:
+  port: 7711

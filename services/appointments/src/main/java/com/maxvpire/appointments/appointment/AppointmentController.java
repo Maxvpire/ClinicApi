@@ -1,6 +1,7 @@
 package com.maxvpire.appointments.appointment;
 
 import com.maxvpire.appointments.appointment.dto.AppointmentRequest;
+import com.maxvpire.appointments.appointment.dto.PaymentAmountRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,13 +67,13 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.findAppointmentByDateAndTime(date, start));
     }
 
-    @PutMapping("/complete/{id}")
-    public ResponseEntity<String> completeAppointment(@PathVariable String id) {
-        this.appointmentService.completeAppointment(id);
+    @PostMapping("/complete/{id}")
+    public ResponseEntity<String> completeAppointment(@PathVariable String id, @Valid @RequestBody PaymentAmountRequest request) {
+        this.appointmentService.completeAppointment(id, request);
         return ResponseEntity.ok("Appointment has been completed");
     }
 
-    @PutMapping("/cancel/{id}")
+    @PostMapping("/cancel/{id}")
     public ResponseEntity<String> cancelAppointment(@PathVariable String id) {
         this.appointmentService.cancelAppointment(id);
         return ResponseEntity.ok("Appointment has been cancelled");

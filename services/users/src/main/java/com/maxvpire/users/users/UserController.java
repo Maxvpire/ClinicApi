@@ -1,7 +1,6 @@
 package com.maxvpire.users.users;
 
-import com.maxvpire.users.users.dto.PasswordCheckRequest;
-import com.maxvpire.users.users.dto.UserResponse;
+import com.maxvpire.users.users.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

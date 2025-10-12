@@ -13,4 +13,10 @@ public class KafkaTopicConfig {
         return TopicBuilder.name("appointments")
                 .build();
     }
+
+    @Bean
+    public NewTopic paymentTopic() {
+        return TopicBuilder.name("payments")
+                .build();
+    }
 }

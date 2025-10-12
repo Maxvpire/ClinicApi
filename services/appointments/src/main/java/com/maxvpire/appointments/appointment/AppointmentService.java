@@ -1,7 +1,11 @@
 package com.maxvpire.appointments.appointment;
 
 import com.maxvpire.appointments.appointment.dto.AppointmentRequest;
+import com.maxvpire.appointments.appointment.dto.PaymentAmountRequest;
 import com.maxvpire.appointments.appointment.dto.RatesKafkaResponse;
+import com.maxvpire.appointments.appointment.events.PaymentCreatedEvent;
+import com.maxvpire.appointments.appointment.events.PaymentDeletedEvent;
+import com.maxvpire.appointments.appointment.events.PaymentEventsService;
 import com.maxvpire.appointments.exception.AppointmentNotFoundException;
 import com.maxvpire.appointments.exception.PastTimeException;
 import com.maxvpire.appointments.exception.RepeatedActionException;
@@ -23,6 +27,7 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final RoomRepository roomRepository;
     private final KafkaTemplate<String, RatesKafkaResponse> ratesKafkaTemplate;
+    private final PaymentEventsService paymentEventsService;
 
 
     public String create(AppointmentRequest request) {
@@ -33,16 +38,20 @@ public class AppointmentService {
                 .patientId(request.patientId())
                 .date(request.date())
                 .start(request.start())
-                .status(request.status())
                 .roomId(room.getId())
                 .notes(request.notes())
+                .status(AppointmentStatus.SCHEDULED)
                 .build();
+
+        String id = appointmentRepository.save(appointment).getId();
+
+
 
         if (!isDateValid(request.date(), request.start())) {
             throw new PastTimeException("You can't put appointment to the past time!");
         }
         else{
-            return appointmentRepository.save(appointment).getId();
+            return id;
         }
     }
 
@@ -99,14 +108,21 @@ public class AppointmentService {
                 .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id: " + date + " and start: " + start + " not found!"));
     }
 
-    public void completeAppointment(String id) {
-        Appointment appointment = appointmentRepository.findById(id)
+    public void completeAppointment(String id, PaymentAmountRequest request) {
+            Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id: " + id + " not found!"));
-        appointment.setStatus(AppointmentStatus.COMPLETED);
+
+
         RatesKafkaResponse response = RatesKafkaResponse.builder()
                 .id(appointment.getId())
                 .patientId(appointment.getPatientId())
                 .doctorId(appointment.getDoctorId())
+                .build();
+
+        PaymentCreatedEvent event = PaymentCreatedEvent.builder()
+                .patientId(appointment.getPatientId())
+                .appointmentId(appointment.getId())
+                .amount(request.getAmount())
                 .build();
 
         if(appointment.getStatus() == AppointmentStatus.COMPLETED) {
@@ -115,7 +131,9 @@ public class AppointmentService {
 
         else if(LocalDate.now().isEqual(appointment.getDate())) {
             if(LocalTime.now().isAfter(appointment.getStart())) {
+                appointment.setStatus(AppointmentStatus.COMPLETED);
                 ratesKafkaTemplate.send("appointments", response);
+                paymentEventsService.sendEvent(event);
                 appointmentRepository.save(appointment);
             }
             else {
@@ -128,7 +146,9 @@ public class AppointmentService {
         }
 
         else if(LocalDate.now().isAfter(appointment.getDate())) {
+            appointment.setStatus(AppointmentStatus.COMPLETED);
             ratesKafkaTemplate.send("appointments", response);
+            paymentEventsService.sendEvent(event);
             appointmentRepository.save(appointment);
         }
 
@@ -142,6 +162,10 @@ public class AppointmentService {
                 .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id: " + id + " not found!"));
         appointment.setStatus(AppointmentStatus.CANCELLED);
 
+        PaymentDeletedEvent event = PaymentDeletedEvent.builder()
+                .appointmentId(appointment.getId())
+                .build();
+
         if(appointment.getStatus().equals(AppointmentStatus.COMPLETED)) {
             throw new ValidationException("You can't cancel completed appointment!");
         }
@@ -152,6 +176,7 @@ public class AppointmentService {
             throw new ValidationException("You can't cancel pasted appointment!");
         }
         else {
+            paymentEventsService.sendEvent(event);
             appointmentRepository.save(appointment);
         }
     }

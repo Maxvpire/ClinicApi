@@ -1,0 +1,49 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        - id: patients-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/patient/**
+
+        - id: doctors-service
+          uri: http://localhost:7799
+          predicates:
+            - Path=/api/v1/doctor/**
+
+        - id: administration-service
+          uri: http://localhost:7744
+          predicates:
+            - Path=/api/v1/administrations/**
+
+        - id: appointments-service
+          uri: http://localhost:7755
+          predicates:
+            - Path=/api/v1/appointment/**
+
+        - id: medicalrecords-service
+          uri: http://localhost:7766
+          predicates:
+            - Path=/api/v1/medication/records/**
+            - Path=/api/v1/prescriptions/**
+
+        - id: payment-service
+          uri: http://localhost:7711
+          predicates:
+            - Path=/api/v1/payment/**
+            - Path=/api/v1/invoices/**
+
+        - id: rates-service
+          uri: http://localhost:7733
+          predicates:
+            - Path=/api/v1/rates/**
+
+        - id: users-service
+          uri: http://localhost:7722
+          predicates:
+            - Path=/api/v1/users/**
+
+server:
+  port: 7707

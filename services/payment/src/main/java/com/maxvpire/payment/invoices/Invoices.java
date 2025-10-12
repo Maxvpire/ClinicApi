@@ -1,5 +1,6 @@
 package com.maxvpire.payment.invoices;
 
+import com.maxvpire.payment.payments.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +33,11 @@ public class Invoices {
     @Column(name = "amount")
     private Double amount;
 
+    @OneToOne(mappedBy = "invoices", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
+
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
