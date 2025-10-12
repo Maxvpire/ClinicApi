@@ -5,11 +5,14 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 RUN chmod +x ./mvnw
+RUN ./mvnw dependency:go-offline
+COPY src src
+
+# 🔹 Make Maven output verbose and DON'T skip logs
 RUN ./mvnw clean package -DskipTests -e -X
 
-
-# *** ADD THESE DEBUGGING LINES ***
-RUN echo "Contents of /app:" && ls -R /app
+# 🔹 Print EVERYTHING so we see where the JAR is
+RUN echo "===== FINAL DIRECTORY STRUCTURE =====" && ls -R /app
 # ********************************
 
 # Stage 2: Create the final, smaller runtime image
