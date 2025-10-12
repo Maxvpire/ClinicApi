@@ -1,24 +1,15 @@
-# -------- BUILD STAGE --------
-FROM maven:3.9.6-eclipse-temurin-23 AS build
+# Use a base image with OpenJDK 24
+FROM openjdk:24-jdk-slim
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy pom.xml and download dependencies first (better caching)
-COPY pom.xml .
-COPY src ./src
+# Copy the Spring Boot JAR file into the container
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
 
-# Build the application
-RUN mvn clean package -DskipTests
-
-# -------- RUNTIME STAGE --------
-FROM eclipse-temurin:24-jre
-WORKDIR /app
-
-# Copy only the final jar from the previous stage
-COPY --from=build /app/target/*.jar app.jar
-
-# Expose application port (change if needed)
+# Expose the port your Spring Boot application listens on (default is 8080)
 EXPOSE 7771
 
-# Run the application
+# Command to run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "app.jar"]
