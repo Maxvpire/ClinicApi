@@ -1,13 +1,19 @@
+# Stage 1: Build the application
+# Use a Java JDK image for building the application.
 FROM sapmachine:24-jdk-ubuntu-noble AS builder
 
 # Set the working directory for the build stage
 WORKDIR /app
 
-# Copy the build configuration files and download dependencies
-# The build cache is leveraged if these files don't change.
+# Copy the Maven wrapper files and pom.xml
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
+
+# Grant execute permission to the Maven wrapper script
+RUN chmod +x ./mvnw
+
+# Download dependencies to leverage Docker's build cache
 RUN ./mvnw dependency:go-offline
 
 # Copy the rest of the source code
@@ -34,5 +40,4 @@ EXPOSE 8888
 COPY --from=builder /app/target/*.jar app.jar
 
 # Run the application
-# The `exec` form is recommended to ensure proper process management.
 ENTRYPOINT ["java", "-jar", "app.jar"]
