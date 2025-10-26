@@ -1,9 +1,9 @@
 spring:
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://config-server:8888
   application:
     name: appointments-service
   kafka:
-      bootstrap-servers: 192.168.206.130:9092
+      bootstrap-servers: kafka:9092
       consumer:
         group-id: appointments-consumer

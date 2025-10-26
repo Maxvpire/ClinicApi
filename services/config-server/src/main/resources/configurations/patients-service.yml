@@ -1,7 +1,11 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:example@localhost:27017/patients?authSource=admin
+      uri: mongodb://mongo:27017/patients  # Use service name
+      host: mongo                       # Or use host property
+      port: 27017
+      username: root
+      password: example
       database: patients
       authentication-database: admin
 
