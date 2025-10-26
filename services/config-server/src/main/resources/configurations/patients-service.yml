@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:example@192.168.206.130:27017/patients?authSource=admin
+      uri: mongodb://root:example@localhost:27017/patients?authSource=admin
       database: patients
       authentication-database: admin
 

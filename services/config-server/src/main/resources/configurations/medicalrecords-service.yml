@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://192.168.206.130:5432/medicalrecords
+    url: jdbc:postgresql://localhost:5432/medicalrecords
     username: maxvpire
     password: max26156
     driver-class-name: org.postgresql.Driver

@@ -41,6 +41,8 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
+    networks:
+      - microservices-net
 
   mongo:
     image: mongo:7.0
@@ -53,6 +55,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - mongo_data:/data/db
+    networks:
+      - microservices-net
 
   mongo-express:
     image: mongo-express
@@ -66,40 +70,40 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: strongpassword
+    networks:
+      - microservices-net
 
   zookeeper:
-      image: confluentinc/cp-zookeeper:7.5.0
-      container_name: zookeeper
-      restart: unless-stopped
-      ports:
-        - "2181:2181"
-      environment:
-        ZOOKEEPER_CLIENT_PORT: 2181
-        ZOOKEEPER_TICK_TIME: 2000
-
-      networks:
-        microservices-net:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - microservices-net
 
   kafka:
-      image: confluentinc/cp-kafka:7.5.0
-      container_name: kafka
-      restart: unless-stopped
-      depends_on:
-        - zookeeper
-      ports:
-        - "9092:9092"
-        - "29092:29092"
-      environment:
-        KAFKA_BROKER_ID: 1
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-        KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://192.168.206.130:9092
-        KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
-        KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-      networks:
-        microservices-net:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://192.168.206.130:9092
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - microservices-net
 
   mail-dev:
     container_name: mail_dev_clinic
@@ -107,21 +111,35 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+    networks:
+      - microservices-net
 
   config-server:
     build: ./services/config-server
+    container_name: config-server
     ports:
       - "8888:8888"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+    networks:
+      - microservices-net
 
   discovery:
     build: ./services/discovery
+    container_name: discovery
     depends_on:
       - config-server
     ports:
       - "8761:8761"
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=discovery  # Fixed: should match container name
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   administration:
     build: ./services/administration
+    container_name: administration
     depends_on:
       - postgres
       - mongo
@@ -131,9 +149,16 @@ services:
       - minio
     ports:
       - "7744:7744"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/  # Fixed: discovery not eureka-server
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
+  # Repeat the same pattern for all other microservices:
   appointments:
     build: ./services/appointments
+    container_name: appointments
     depends_on:
       - postgres
       - mongo
@@ -141,12 +166,17 @@ services:
       - config-server
       - discovery
       - minio
-
     ports:
       - "7755:7755"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   doctors:
     build: ./services/doctors
+    container_name: doctors
     depends_on:
       - postgres
       - mongo
@@ -156,10 +186,15 @@ services:
       - minio
     ports:
       - "7799:7799"
-
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   medicalrecords:
     build: ./services/medicalrecords
+    container_name: medicalrecords
     depends_on:
       - postgres
       - mongo
@@ -167,13 +202,17 @@ services:
       - config-server
       - discovery
       - minio
-
     ports:
       - "7766:7766"
-
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   patients:
     build: ./services/patients
+    container_name: patients
     depends_on:
       - postgres
       - mongo
@@ -181,13 +220,17 @@ services:
       - config-server
       - discovery
       - minio
-
     ports:
       - "7788:7788"
-
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   payment:
     build: ./services/payment
+    container_name: payment
     depends_on:
       - postgres
       - mongo
@@ -195,13 +238,17 @@ services:
       - config-server
       - discovery
       - minio
-
     ports:
       - "7711:7711"
-
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   rates:
     build: ./services/rates
+    container_name: rates
     depends_on:
       - postgres
       - mongo
@@ -209,13 +256,17 @@ services:
       - config-server
       - discovery
       - minio
-
     ports:
       - "7733:7733"
-
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   users:
     build: ./services/users
+    container_name: users
     depends_on:
       - postgres
       - mongo
@@ -223,12 +274,17 @@ services:
       - config-server
       - discovery
       - minio
-
     ports:
       - "7771:7771"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
   gateway:
     build: ./services/gateway
+    container_name: gateway
     depends_on:
       - administration
       - appointments
@@ -240,9 +296,13 @@ services:
       - payment
       - rates
       - users
-
-
-
+    ports:
+      - "7707:7707"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - microservices-net
 
 networks:
   microservices-net:
