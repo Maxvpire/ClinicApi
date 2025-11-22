@@ -1,0 +1,8 @@
+CREATE DATABASE administrations;
+CREATE DATABASE appointments;
+CREATE DATABASE doctors;
+CREATE DATABASE medicalrecords;
+CREATE DATABASE patients;
+CREATE DATABASE payment;
+CREATE DATABASE rates;
+CREATE DATABASE users;

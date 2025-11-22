@@ -8,6 +8,7 @@ services:
       PGDATA: /var/lib/postgres/data
     volumes:
       - postgres:/var/lib/postgres/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
     networks:
@@ -92,14 +93,14 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "9093:9093"
       - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://192.168.206.130:9092
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://192.168.206.130:9093
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
@@ -121,6 +122,11 @@ services:
       - "8888:8888"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - microservices-net
 
@@ -128,12 +134,18 @@ services:
     build: ./services/discovery
     container_name: discovery
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
     ports:
       - "8761:8761"
     environment:
       - EUREKA_INSTANCE_HOSTNAME=discovery  # Fixed: should match container name
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - microservices-net
 
@@ -141,12 +153,18 @@ services:
     build: ./services/administration
     container_name: administration
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7744:7744"
     environment:
@@ -160,12 +178,18 @@ services:
     build: ./services/appointments
     container_name: appointments
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7755:7755"
     environment:
@@ -178,12 +202,18 @@ services:
     build: ./services/doctors
     container_name: doctors
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7799:7799"
     environment:
@@ -196,12 +226,18 @@ services:
     build: ./services/medicalrecords
     container_name: medicalrecords
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7766:7766"
     environment:
@@ -214,12 +250,18 @@ services:
     build: ./services/patients
     container_name: patients
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7788:7788"
     environment:
@@ -232,12 +274,18 @@ services:
     build: ./services/payment
     container_name: payment
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7711:7711"
     environment:
@@ -250,12 +298,18 @@ services:
     build: ./services/rates
     container_name: rates
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7733:7733"
     environment:
@@ -268,12 +322,18 @@ services:
     build: ./services/users
     container_name: users
     depends_on:
-      - postgres
-      - mongo
-      - kafka
-      - config-server
-      - discovery
-      - minio
+      postgres:
+        condition: service_started
+      mongo:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "7771:7771"
     environment:
@@ -286,16 +346,26 @@ services:
     build: ./services/gateway
     container_name: gateway
     depends_on:
-      - administration
-      - appointments
-      - discovery
-      - doctors
-      - config-server
-      - medicalrecords
-      - patients
-      - payment
-      - rates
-      - users
+      administration:
+        condition: service_started
+      appointments:
+        condition: service_started
+      discovery:
+        condition: service_healthy
+      doctors:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      medicalrecords:
+        condition: service_started
+      patients:
+        condition: service_started
+      payment:
+        condition: service_started
+      rates:
+        condition: service_started
+      users:
+        condition: service_started
     ports:
       - "7707:7707"
     environment:
